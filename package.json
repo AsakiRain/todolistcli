@@ -1,0 +1,23 @@
+{
+  "name": "rainchen-todolistcli",
+  "version": "1.0.0",
+  "description": "hduhelp frontend practice 1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AsakiRain/todolistcli.git"
+  },
+  "author": "RainChen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AsakiRain/todolistcli/issues"
+  },
+  "homepage": "https://github.com/AsakiRain/todolistcli#readme",
+  "dependencies": {
+    "commander": "^8.2.0",
+    "js-yaml": "^4.1.0"
+  }
+}
