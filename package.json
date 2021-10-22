@@ -1,8 +1,8 @@
 {
-  "name": "rainchen-todolistcli",
+  "name": "rainchen-todolist-cli",
   "version": "1.0.0",
   "description": "hduhelp frontend practice 1",
-  "main": "index.js",
+  "main": "todo.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,7 +17,8 @@
   },
   "homepage": "https://github.com/AsakiRain/todolistcli#readme",
   "dependencies": {
-    "commander": "^8.2.0",
-    "js-yaml": "^4.1.0"
+    "cli-table2": "^0.2.0",
+    "js-yaml": "^4.1.0",
+    "minimist": "^1.2.5"
   }
 }
