@@ -44,23 +44,43 @@ function showHelp(){
     )
     console.log(table.toString());
 }
-function executeCMD(cmds){
+function executeCMD(cmds,status=''){
     switch(cmds[0]){
         case 'ls':{
             let table = new cliTable({
                 head: ['编号', '内容', '状态'],
             })
-            isNull = true;                  //首先认为字典是空的
-            for(let i in data['list']){     //如果字典非空，就会更改这个值，否则还是true
-                isNull = false;
-            }
-            if(isNull){
-                table.push({0: ["没有事项", tags['done']]})
+            if(status){
+                if(status in tags){
+                    let count = 0;
+                    for(let i in data['list']){
+                        if(data['list'][i]['tag'] == tags[status]){
+                            count++;
+                            table.push({[i]: [data['list'][i]['des'], data['list'][i]['tag']]})
+                        }
+                    }
+                    if(count == 0){
+                        table.push({'0': ['没有事项', tags[status]]});
+                    }
+                }
+                else{
+                    console.error('未知状态');
+                    process.exit(1);
+                }
             }
             else{
-                for(var i in data['list']){
-                    table.push({[i]: [data['list'][i]['des'], data['list'][i]['tag']]})
-                            //如果i不加中括号，将不会被当成变量
+                isNull = true;                  //首先认为字典是空的
+                for(let i in data['list']){     //如果字典非空，就会更改这个值，否则还是true
+                    isNull = false;
+                }
+                if(isNull){
+                    table.push({0: ["没有事项", tags['done']]})
+                }
+                else{
+                    for(var i in data['list']){
+                        table.push({[i]: [data['list'][i]['des'], data['list'][i]['tag']]})
+                                //如果i不加中括号，将不会被当成变量
+                    }
                 }
             }
             console.log(table.toString())
@@ -190,11 +210,12 @@ function main(){
         };
     }
     let args = minimist(process.argv.slice(2))
+    console.log(args);
     if(!args['_'].length){      //没有提供命令
         showHelp();
     }
     else{
-        executeCMD(args['_'])   //执行命令
+        executeCMD(args['_'],args['status'])   //执行命令
     }
 }
 main();                         //我比较喜欢把所有东西写在函数里
