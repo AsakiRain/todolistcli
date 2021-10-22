@@ -3,7 +3,7 @@ const yaml = require('js-yaml')
 const cliTable = require('cli-table2')
 const minimist = require('minimist')
 
-const tags = {
+const allStatus = {
     'todo': '待办',
     'doing': '进行中',
     'done': '完成',
@@ -37,9 +37,10 @@ function showHelp(){
     table.push(
         ['node todo help', '显示程序帮助'],
         ['node todo ls', '列出所有事项'],
-        ['node todo add <descrption> [tag]', '新增事项，默认状态为"待办"'],
+        ['node todo add <descrption> [status]', '新增事项，默认状态为"待办"'],
         ['node todo rm <num>', '删除序号为num的事项'],
-        ['node todo set <num> <tag>', '标记序号为num的事项的状态，可输入"todo""doing""done"，会自动转换为中文'],
+        ['node xxx.js ls [--status=<status>]','列出所有指定状态的事项'],
+        ['node todo set <num> <status>', '标记序号为num的事项的状态，可输入"todo""doing""done"，会自动转换为中文'],
         ['node todo init', '测试用，快速创建四个事项'],
     )
     console.log(table.toString());
@@ -51,16 +52,16 @@ function executeCMD(cmds,status=''){
                 head: ['编号', '内容', '状态'],
             })
             if(status){
-                if(status in tags){
+                if(status in allStatus){
                     let count = 0;
                     for(let i in data['list']){
-                        if(data['list'][i]['tag'] == tags[status]){
+                        if(data['list'][i]['status'] == allStatus[status]){
                             count++;
-                            table.push({[i]: [data['list'][i]['des'], data['list'][i]['tag']]})
+                            table.push({[i]: [data['list'][i]['des'], data['list'][i]['status']]})
                         }
                     }
                     if(count == 0){
-                        table.push({'0': ['没有事项', tags[status]]});
+                        table.push({'0': ['没有事项', allStatus[status]]});
                     }
                 }
                 else{
@@ -74,11 +75,11 @@ function executeCMD(cmds,status=''){
                     isNull = false;
                 }
                 if(isNull){
-                    table.push({0: ["没有事项", tags['done']]})
+                    table.push({0: ["没有事项", allStatus['done']]})
                 }
                 else{
                     for(var i in data['list']){
-                        table.push({[i]: [data['list'][i]['des'], data['list'][i]['tag']]})
+                        table.push({[i]: [data['list'][i]['des'], data['list'][i]['status']]})
                                 //如果i不加中括号，将不会被当成变量
                     }
                 }
@@ -95,7 +96,7 @@ function executeCMD(cmds,status=''){
                 index = (index + 1).toString();     //新插入的事项下标再+1
                 data['list'][index] = {};
                 data['list'][index]['des'] = cmds[1];
-                data['list'][index]['tag'] = tags[cmds[2]]?tags[cmds[2]]:tags['todo'];
+                data['list'][index]['status'] = allStatus[cmds[2]]?allStatus[cmds[2]]:allStatus['todo'];
                 saveFile();
                 executeCMD(['ls']);
             }
@@ -136,19 +137,19 @@ function executeCMD(cmds,status=''){
                 list: {
                     '1': {
                         'des': '要做的事1',
-                        'tag': tags['done'],
+                        'status': allStatus['done'],
                     },
                     '2': {
                         'des': '还有很多2',
-                        'tag': tags['todo'],
+                        'status': allStatus['todo'],
                     },
                     '3': {
                         'des': '头发3',
-                        'tag': tags['doing'],
+                        'status': allStatus['doing'],
                     },
                     '4': {
                         'des': '拒绝了我4',
-                        'tag': tags['doing'],
+                        'status': allStatus['doing'],
                     },
                 
                 }
@@ -160,8 +161,8 @@ function executeCMD(cmds,status=''){
         case 'set':{
             if(cmds[1] && cmds[2]){             //要求两个参数都给
                 if(cmds[1] in data['list']){
-                    if(cmds[2] in tags){
-                        data['list'][cmds[1]]['tag'] = tags[cmds[2]];
+                    if(cmds[2] in allStatus){
+                        data['list'][cmds[1]]['status'] = allStatus[cmds[2]];
                         saveFile();
                         executeCMD(['ls']);
                     }
@@ -210,7 +211,6 @@ function main(){
         };
     }
     let args = minimist(process.argv.slice(2))
-    console.log(args);
     if(!args['_'].length){      //没有提供命令
         showHelp();
     }
